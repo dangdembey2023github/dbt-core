@@ -6,7 +6,6 @@ from typing import Optional, Dict, Any, List
 
 from dbt.events.functions import fire_event
 from dbt.events.types import (
-    OpenCommand,
     DebugCmdOut,
     DebugCmdResult,
 )
@@ -91,20 +90,13 @@ class DebugTask(BaseTask):
             return None
         return self.project.profile_name
 
-    def path_info(self):
-        open_cmd = dbt.clients.system.open_dir_cmd()
-        fire_event(OpenCommand(open_cmd=open_cmd, profiles_dir=self.profiles_dir))
-
     def run(self):
-        if self.args.config_dir:
-            self.path_info()
-            return not self.any_failure
-
         version = get_installed_version().to_version_string(skip_matcher=True)
         fire_event(DebugCmdOut(msg="dbt version: {}".format(version)))
         fire_event(DebugCmdOut(msg="python version: {}".format(sys.version.split()[0])))
         fire_event(DebugCmdOut(msg="python path: {}".format(sys.executable)))
         fire_event(DebugCmdOut(msg="os info: {}".format(platform.platform())))
+        fire_event(DebugCmdOut(msg="Using profiles dir at {}".format(self.profiles_dir)))
         fire_event(DebugCmdOut(msg="Using profiles.yml file at {}".format(self.profile_path)))
         fire_event(DebugCmdOut(msg="Using dbt_project.yml file at {}".format(self.project_path)))
         self.test_configuration()
