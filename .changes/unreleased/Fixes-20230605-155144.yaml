@@ -1,0 +1,7 @@
+kind: Fixes
+body: Remove the broken --config-dir and log the profile dir location along with other
+  prefunctory dbt debug info..
+time: 2023-06-05T15:51:44.523411-07:00
+custom:
+  Author: versusfacit
+  Issue: "7774"
